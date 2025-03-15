@@ -7,28 +7,32 @@
 #include <map>
 #include <vector>
 #include <initializer_list>
+#include <cmath>
+#include <memory>
 
-const int values[] = { 1,2,3,4,5 };
-const int val_size = sizeof values / sizeof(int);
+using namespace std;
+
+const int values[] = {1, 2, 3, 4, 5};
+const int valSize = sizeof values / sizeof(int);
 
 
 
 class Foo {
-    std::vector<int> mElements;
+    vector<int> mElements;
 public:
-    Foo(std::initializer_list<int> list)
+    Foo(initializer_list<int> list)
     : mElements(list) {}
 };
 
-struct {
+struct Person {
     int age;
     float weight;
-} person;
+};
 
 
 void show_output(const int** pp)
 {
-    printf("%p : %p : %d", pp, *pp, **pp);
+    printf("%p : %p : %d\n", (void*)pp, (void*)*pp, **pp);
 }
 
 
@@ -37,13 +41,17 @@ int main() {
 
     int x = -10;
     int y = 15;
-    cout << " " << (x,y) << std::endl;
+    cout << " " << x << ", " << y << endl;
 
     // print integer ratios of y:x till x < y
     // invalid ratios should print 0
     while (x < y)
     {
-        cout << "ratio: " << (y/x) << endl;
+        if (x == 0) {
+            cout << "ratio: 0" << endl;
+        } else {
+            cout << "ratio: " << (y / x) << endl;
+        }
         x++;
         y--;
     }
@@ -66,21 +74,20 @@ int main() {
     for (int i = 0; i < valSize; i++)
         m.insert(make_pair(values[i], pow(values[i], .5)));
 
-    m.insert(1, 2);
+    m.insert(make_pair(1, 2));
 
 
     int n = 1;
     int* p = &n;
-    show_output(p);
+    show_output((const int**)&p);
 
     // Initialise a person on the heap with the use of smart pointers (unique_ptr) instead.
-    struct person* ptr;
-    ptr = (struct person*)malloc(sizeof(struct person));
+    unique_ptr<Person> ptr = make_unique<Person>();
     ptr->age = 10;
     ptr->weight = 55.5;
 
     // Initialise with 5 integers
-    Foo foo;
+    Foo foo = {1, 2, 3, 4, 5};
 
     return 0;
 }
