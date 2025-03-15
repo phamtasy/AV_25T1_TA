@@ -23,6 +23,12 @@ class Actor;
 class Observer {
 public:
 	virtual void ReactToEvent(Actor* actor) = 0;
+	virtual ~Observer() = default;
+};
+
+class MockObserver : public Observer {
+public:
+	MOCK_METHOD(void, ReactToEvent, (Actor* actor), (override));
 };
 
 class Actor {
