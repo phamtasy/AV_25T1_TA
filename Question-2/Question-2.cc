@@ -7,12 +7,16 @@
 #include <vector>
 #include <thread>
 #include <iostream>
+#include <mutex>
+
+using namespace std;
 
 int total = 0;
 
 class Wallet
 {
     int mMoney;
+    mutex mMutex;
 public:
     Wallet() :mMoney(0) {}
     int getMoney() { return mMoney; }
@@ -20,7 +24,11 @@ public:
     {
         for (int i = 0; i < money; ++i)
         {
+            // Lock the mutex before updating the wallet
+            mMutex.lock();
             mMoney++;
+            // Unlock the mutex after updating the wallet
+            mMutex.unlock();
         }
     }
 };
